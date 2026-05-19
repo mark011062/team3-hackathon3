@@ -39,7 +39,8 @@ _ANSWER_SEEKING_KEYWORDS = [
 
 _OFF_TOPIC_KEYWORDS = [
     "weather", "sports", "news", "movie", "music", "game", "recipe",
-    "politics", "stock", "crypto", "dating",
+    "politics", "stock", "crypto", "dating", "taxes", "celebrity", "fashion", "travel", "fitness", "diet", "horoscope",
+    "podcast", "streaming", "concert", "festival",  "mortgage", "insurance", "shopping", "coupon", "lottery", "gambling", "social media", "meme", "viral", "influencer", "youtube", "tiktok", "religion", "astrology", "conspiracy", "election", "war", "lawsuit", "relationship", "parenting", "pets", "gardening", "diy", "car",
 ]
 
 
