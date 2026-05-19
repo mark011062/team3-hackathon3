@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.main import build_graph, PathwiseState
+from app.logger import log_interaction
 
 
 # =============================================================================
@@ -52,6 +53,14 @@ def chat(req: ChatRequest):
             response_text="",
         )
     )
+
+    log_interaction(
+        user_input=req.user_input,
+        system_output=result["response_text"],
+        intent=result["intent"],
+        attempt=req.attempt,
+    )
+
     return ChatResponse(
         response_text=result["response_text"],
         intent=result["intent"],
