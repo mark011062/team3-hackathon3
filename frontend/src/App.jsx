@@ -24,17 +24,12 @@ s[::2]           every other char
 .split()   .join()    .replace()
 .find()    .count()   .startswith()
 
-── Examples ─────────────────────
-word = "cheese"
-
-word[:3]       → "che"
-word.upper()   → "CHEESE"
-len(word)      → 6`;
+`;
 
   const QUESTIONS = [
     {
       unit: "Unit 1.0",
-      text: 'Slice the first three characters from the string "cheese"',
+      text: 'Slice the first three characters from the string: word = "cheese"',
       accepted: ['cheese[:3]', '"cheese"[:3]', "'cheese'[:3]"],
       hint: 'Try square-bracket slice notation → string[start:end]\nExample: "hello"[0:2] gives "he"',
     },
@@ -135,10 +130,24 @@ len(word)      → 6`;
     setChat((prev) => [...prev, { role: "user", text: userMessage }]);
 
     try {
+      // Build history from the current chat snapshot (before the new user message
+      // is rendered). React state updates are asynchronous, so `chat` here still
+      // holds the pre-setChat value — exactly the turns the backend needs for context.
+      // "hint" is the frontend's display role; the backend expects "assistant".
+      const conversation_history = chat.map((m) => ({
+        role: m.role === "hint" ? "assistant" : m.role,
+        content: m.text,
+      }));
+
       const res = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: userMessage, attempt: attemptRef.current }),
+        body: JSON.stringify({
+          user_input: userMessage,
+          lesson_context: currentQuestion.text,
+          attempt: attemptRef.current,
+          conversation_history,
+        }),
       });
 
       const data = await res.json();

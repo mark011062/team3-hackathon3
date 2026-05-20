@@ -25,7 +25,11 @@ graph = build_graph()
 
 class ChatRequest(BaseModel):
     user_input: str
+    lesson_context: str = ""
     attempt: int = 1
+    # Full chat history sent by the frontend so the LLM and RAG retrieval have
+    # context about what was already discussed. Defaults to [] for first turns.
+    conversation_history: list[dict] = []
 
 
 class ChatResponse(BaseModel):
@@ -48,6 +52,9 @@ def chat(req: ChatRequest):
     result = graph.invoke(
         PathwiseState(
             user_input=req.user_input,
+            lesson_context=req.lesson_context,
+            conversation_history=req.conversation_history,
+            retrieved_chunks=[],
             intent="",
             attempt=req.attempt,
             response_text="",
